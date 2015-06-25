@@ -51,13 +51,13 @@ namespace SigScan
 		bool AddProcess(ProcessImage *pProcess_in);
 		void Clear();
 
-		DWORD_PTR ScanCode(const std::string &Pattern_in, long Offset_in);
-		DWORD ScanMemory(const std::string &Pattern_in, long Offset_in, 
-						 MemoryScanResult &ScanResults_in_out);
+		size_t ScanCode(const std::string &Pattern_in, long Offset_in);
+		size_t ScanMemory(const std::string &Pattern_in, long Offset_in, 
+						  MemoryScanResult &ScanResults_in_out);
 
 	protected:
-		DWORD_PTR Scan(ProcessImage *pProcess_in, const BYTE* MemoryBlock_in,
-					   DWORD BlockSize_in, const std::string &Pattern_in, long Offset_in);
+		size_t Scan(ProcessImage *pProcess_in, const BYTE* MemoryBlock_in,
+					DWORD_PTR BlockSize_in, const std::string &Pattern_in, long Offset_in);
 
 		//! pointer to the current process image
 		ProcessImage *m_pCurrentProcess;

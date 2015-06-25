@@ -58,7 +58,7 @@ namespace SigScan
 	*/
 	ProcessImage* SigScan::FindProcess(DWORD ProcessID_in, const string_t & ModuleName_in) const
 	{
-		ProcessImage DummyInfo(ProcessID_in, ModuleName_in, NULL, 0UL, false);
+		ProcessImage DummyInfo(ProcessID_in, ModuleName_in, NULL, 0L, false);
 		ProcessMap::const_iterator ProcessIt = m_ProcessMap.find(DummyInfo.GetProcessKey());
 
 		if (ProcessIt != m_ProcessMap.cend())
@@ -122,9 +122,9 @@ namespace SigScan
 		\param[in] Offset_in : an offset to apply to the address once the pattern is found
 		\return the address of the first match
 	*/
-	DWORD_PTR SigScan::ScanCode(const std::string &Pattern_in, long Offset_in)
+	size_t SigScan::ScanCode(const std::string &Pattern_in, long Offset_in)
 	{
-		DWORD_PTR Result = NULL;
+		size_t Result = NULL;
 
 		if (m_pCurrentProcess != NULL)
 		{
@@ -150,7 +150,7 @@ namespace SigScan
 		\param[in,out] ScanResults_in_out : array receiving the results
 		\return the number of results matching the pattern
 	*/
-	DWORD SigScan::ScanMemory(const std::string &Pattern_in, long Offset_in, 
+	size_t SigScan::ScanMemory(const std::string &Pattern_in, long Offset_in, 
 							  MemoryScanResult &ScanResults_in_out)
 	{
 		if (m_pCurrentProcess != NULL)
@@ -165,7 +165,7 @@ namespace SigScan
 								  + m_pCurrentProcess->GetImageSize();				
 				MEMORY_BASIC_INFORMATION MemoryInfo;				
 				BYTE *pMemoryBlock = NULL;
-				DWORD_PTR Result = NULL;
+				size_t Result = NULL;
 
 				memset(&MemoryInfo, 0, sizeof(MemoryInfo));
 
@@ -221,10 +221,10 @@ namespace SigScan
 		\param[in] Offset_in : an offset to apply to the address once the pattern is found
 		\return the address of the first match
 	*/
-	DWORD_PTR SigScan::Scan(ProcessImage *pProcess_in, const BYTE* pMemoryBlock_in,
-							DWORD BlockSize_in, const std::string &Pattern_in, long Offset_in)
+	size_t SigScan::Scan(ProcessImage *pProcess_in, const BYTE* pMemoryBlock_in,
+						 DWORD_PTR BlockSize_in, const std::string &Pattern_in, long Offset_in)
 	{
-		DWORD_PTR Result = NULL;
+		size_t Result = NULL;
 
 		if (pProcess_in != NULL)
 		{
@@ -244,9 +244,9 @@ namespace SigScan
 					BYTE Byte1 = '\0', Byte2 = '\0';
 					SubPatternArray SubPatterns;
 					BYTE *pMemoryPattern = NULL;
-					size_t PatternIndex = 0U;
+					size_t PatternIndex = 0L;
 					bool Dereference = true;
-					long ResultOffset = 0L;
+					size_t ResultOffset = 0L;
 
 					if(Pattern_in[0] == '#' && Pattern_in[1] == '#')
 					{

@@ -22,7 +22,7 @@ namespace SigScan
 	{
 	public:
 		ProcessImage(DWORD ProcessID_in, const string_t &ModuleName_in,
-					 BYTE *pBaseAddr_in, DWORD ImageSize_in, bool IsCurrent_in);
+					 BYTE *pBaseAddr_in, DWORD_PTR ImageSize_in, bool IsCurrent_in);
 		virtual ~ProcessImage();
 
 		virtual ScanResult* AddResult(const std::string &Pattern_in,
@@ -37,7 +37,7 @@ namespace SigScan
 		DWORD GetProcessID() const;
 		bool IsInitialized() const;
 		long GetProcessKey() const;
-		DWORD GetImageSize() const;
+		DWORD_PTR GetImageSize() const;
 
 	protected:
 		//! a map of results found in the image
@@ -47,7 +47,7 @@ namespace SigScan
 		//! the process base address
 		BYTE *m_pBaseAddress;
 		//! the size of the image
-		DWORD m_ImageSize;
+		DWORD_PTR m_ImageSize;
 		//! the ID of the process
 		DWORD m_ProcessID;
 		//! flag specifying if the process is the current one

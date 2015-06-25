@@ -20,7 +20,7 @@ namespace SigScan
 		\param[in] IsCurrent_in : flag specifying if the process is the current one
 	*/
 	ProcessImage::ProcessImage(DWORD ProcessID_in, const string_t &ModuleName_in,
-							   BYTE *pBaseAddr_in, DWORD ImageSize_in, bool IsCurrent_in)
+							   BYTE *pBaseAddr_in, DWORD_PTR ImageSize_in, bool IsCurrent_in)
 		: m_IsCurrent(IsCurrent_in), m_MapKey(0L), m_pProcessImage(IsCurrent_in ? pBaseAddr_in : NULL),
 		  m_pBaseAddress(pBaseAddr_in), m_ImageSize(ImageSize_in), m_ProcessID(ProcessID_in)
 	{
@@ -147,7 +147,7 @@ namespace SigScan
 	/*! \brief Retrieves the size of the process image
 		\return the size of the process image
 	*/
-	DWORD ProcessImage::GetImageSize() const
+	DWORD_PTR ProcessImage::GetImageSize() const
 	{ return m_ImageSize; }
 
 	/*! \brief Checks if the process is the current one
