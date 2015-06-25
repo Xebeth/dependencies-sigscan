@@ -20,11 +20,18 @@
 #include <ProcessImage.h>
 
 #ifdef _DEBUG
-	#pragma comment(lib, "SigScan.x86d.lib")
+	#ifdef _M_X64
+		#pragma comment(lib, "SigScan.x64d.lib")
+	#else
+		#pragma comment(lib, "SigScan.x86d.lib")
+	#endif
 #else
-	#pragma comment(lib, "SigScan.x86.lib")
+	#ifdef _M_X64
+		#pragma comment(lib, "SigScan.x64.lib")
+	#else
+		#pragma comment(lib, "SigScan.x86.lib")
+	#endif
 #endif // _DEBUG
-
 #undef _MEMORY_SCANNER_SDK_INCLUDE_
 
 #endif//__MEMORY_SCANNER_H__
