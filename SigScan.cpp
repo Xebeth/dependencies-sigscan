@@ -268,7 +268,7 @@ namespace SigScan
 					pMemoryPattern = new BYTE[BufferSize];
 					ZeroMemory(pMemoryPattern, BufferSize);
 
-					for (; PatternIt != EndIt; ++PatternIt, ++PatternIndex)
+					for (; PatternIt != EndIt && PatternIndex < BufferSize; ++PatternIt, ++PatternIndex)
 					{
 						Byte1 = *PatternIt;
 						Byte2 = *(++PatternIt);
