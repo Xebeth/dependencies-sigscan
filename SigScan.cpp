@@ -16,7 +16,7 @@
 namespace SigScan
 {
 	//! \brief SigScan default constructor
-	SigScan::SigScan() : m_pCurrentProcess(NULL) {}
+	SigScan::SigScan() : m_pCurrentProcess(nullptr) {}
 
 	//! \brief SigScan destructor
 	SigScan::~SigScan()
@@ -31,7 +31,7 @@ namespace SigScan
 		for(; ProcessIt != EndIt; ++ProcessIt)
 			delete ProcessIt->second;
 
-		m_pCurrentProcess = NULL;
+		m_pCurrentProcess = nullptr;
 		m_ProcessMap.clear();
 	}
 	
@@ -41,7 +41,7 @@ namespace SigScan
 	*/
 	bool SigScan::AddProcess(ProcessImage *pProcess_in)
 	{
-		if (pProcess_in != NULL)
+		if (pProcess_in != nullptr)
 		{
 			m_ProcessMap[pProcess_in->GetProcessKey()] = pProcess_in;
 
@@ -54,17 +54,17 @@ namespace SigScan
 	/*! \brief Retrieves a result given the process ID and module name
 		\param[in] ProcessID_in : the process ID
 		\param[in] ModuleName_in : the module name
-		\return a pointer to the process image if found; NULL otherwise
+		\return a pointer to the process image if found; nullptr otherwise
 	*/
 	ProcessImage* SigScan::FindProcess(DWORD ProcessID_in, const string_t & ModuleName_in) const
 	{
-		ProcessImage DummyInfo(ProcessID_in, ModuleName_in, NULL, 0L, false);
+		ProcessImage DummyInfo(ProcessID_in, ModuleName_in, nullptr, 0L, false);
 		ProcessMap::const_iterator ProcessIt = m_ProcessMap.find(DummyInfo.GetProcessKey());
 
 		if (ProcessIt != m_ProcessMap.cend())
 			return ProcessIt->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	/*! \brief Initializes the scanning process
@@ -75,7 +75,7 @@ namespace SigScan
 	{
 		m_pCurrentProcess = FindProcess(ProcessID_in, ModuleName_in);
 
-		if (m_pCurrentProcess == NULL)
+		if (m_pCurrentProcess == nullptr)
 		{
 			MODULEENTRY32 uModule;
 
@@ -99,10 +99,10 @@ namespace SigScan
 					{
 						// reading the process memory failed
 						delete m_pCurrentProcess;
-						m_pCurrentProcess = NULL;
+						m_pCurrentProcess = nullptr;
 					}
 					// else the process is the current one, no memory reading necessary
-					if (m_pCurrentProcess != NULL)
+					if (m_pCurrentProcess != nullptr)
 						AddProcess(m_pCurrentProcess);
 					// lookup finished
 					break;
@@ -114,7 +114,7 @@ namespace SigScan
 			CloseHandle(hModuleSnapshot);
 		}
 
-		return (m_pCurrentProcess != NULL);
+		return (m_pCurrentProcess != nullptr);
 	}
 
 	/*! \brief Scans the process image for the specified pattern of opcodes
@@ -126,11 +126,11 @@ namespace SigScan
 	{
 		size_t Result = NULL;
 
-		if (m_pCurrentProcess != NULL)
+		if (m_pCurrentProcess != nullptr)
 		{
 			const BYTE *pBaseAddress = m_pCurrentProcess->GetBaseAddress();
 
-			if (pBaseAddress != NULL)
+			if (pBaseAddress != nullptr)
 			{
 				Result = Scan(m_pCurrentProcess, pBaseAddress,
 							  m_pCurrentProcess->GetImageSize(),
@@ -153,18 +153,18 @@ namespace SigScan
 	size_t SigScan::ScanMemory(const std::string &Pattern_in, long Offset_in, 
 							  MemoryScanResult &ScanResults_in_out)
 	{
-		if (m_pCurrentProcess != NULL)
+		if (m_pCurrentProcess != nullptr)
 		{
 			// open the process for reading
 			HANDLE hProcess = OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, m_pCurrentProcess->GetProcessID());
 
-			if (hProcess != NULL)
+			if (hProcess != nullptr)
 			{
 				bool bIsCurrent = m_pCurrentProcess->IsCurrentProcess();
 				const BYTE *pAddr = m_pCurrentProcess->GetBaseAddress()
 								  + m_pCurrentProcess->GetImageSize();				
 				MEMORY_BASIC_INFORMATION MemoryInfo;				
-				BYTE *pMemoryBlock = NULL;
+				BYTE *pMemoryBlock = nullptr;
 				size_t Result = NULL;
 
 				memset(&MemoryInfo, 0, sizeof(MemoryInfo));
@@ -178,7 +178,7 @@ namespace SigScan
 						{
 							if (Buffer::Realloc(&pMemoryBlock, MemoryInfo.RegionSize)
 							 && ReadProcessMemory(hProcess, (LPCVOID)MemoryInfo.BaseAddress,
-												  (LPVOID)pMemoryBlock, MemoryInfo.RegionSize, NULL) == FALSE)
+												  (LPVOID)pMemoryBlock, MemoryInfo.RegionSize, nullptr) == FALSE)
 							{
 								// failed to read from the process memory
 								// => try the next memory block
@@ -188,7 +188,7 @@ namespace SigScan
 						else
 							pMemoryBlock = (BYTE*)MemoryInfo.BaseAddress;
 
-						if (pMemoryBlock != NULL)
+						if (pMemoryBlock != nullptr)
 						{
 							Result = Scan(m_pCurrentProcess, pMemoryBlock,
 										  MemoryInfo.RegionSize, Pattern_in, Offset_in);
@@ -206,7 +206,7 @@ namespace SigScan
 
 				CloseHandle(hProcess);
 
-				if (bIsCurrent == false && pMemoryBlock != NULL)
+				if (bIsCurrent == false && pMemoryBlock != nullptr)
 					free(pMemoryBlock);
 			}
 		}
@@ -226,16 +226,16 @@ namespace SigScan
 	{
 		size_t Result = NULL;
 
-		if (pProcess_in != NULL)
+		if (pProcess_in != nullptr)
 		{
 			ScanResult *pResult = pProcess_in->FindResult(Pattern_in, Offset_in);
 
-			if (pResult == NULL)
+			if (pResult == nullptr)
 			{
 				size_t PatternLength = Pattern_in.length();
 
 				// make sure the pattern is of even length and at least 2 characters
-				if (pMemoryBlock_in != NULL && PatternLength >= 2U && PatternLength % 2 == 0)
+				if (pMemoryBlock_in != nullptr && PatternLength >= 2U && PatternLength % 2 == 0)
 				{
 					std::string::const_iterator PatternIt = Pattern_in.cbegin();
 					std::string::const_iterator EndIt = Pattern_in.cend();
@@ -243,7 +243,7 @@ namespace SigScan
 					size_t BufferSize = PatternLength / 2;
 					BYTE Byte1 = '\0', Byte2 = '\0';
 					SubPatternArray SubPatterns;
-					BYTE *pMemoryPattern = NULL;
+					BYTE *pMemoryPattern = nullptr;
 					size_t PatternIndex = 0L;
 					bool Dereference = true;
 					size_t ResultOffset = 0L;
@@ -329,7 +329,7 @@ namespace SigScan
 
 					// start the memory search
 					SubPatternArray::const_iterator SubPatternIt, SubEndIt = SubPatterns.cend();
-					BYTE *pSearchAddr = NULL;
+					BYTE *pSearchAddr = nullptr;
 					bool bMatching = true;
 
 					// search for the pattern in the process image

@@ -21,7 +21,7 @@ namespace SigScan
 	*/
 	ProcessImage::ProcessImage(DWORD ProcessID_in, const string_t &ModuleName_in,
 							   BYTE *pBaseAddr_in, DWORD_PTR ImageSize_in, bool IsCurrent_in)
-		: m_IsCurrent(IsCurrent_in), m_MapKey(0L), m_pProcessImage(IsCurrent_in ? pBaseAddr_in : NULL),
+		: m_IsCurrent(IsCurrent_in), m_MapKey(0L), m_pProcessImage(IsCurrent_in ? pBaseAddr_in : nullptr),
 		  m_pBaseAddress(pBaseAddr_in), m_ImageSize(ImageSize_in), m_ProcessID(ProcessID_in)
 	{
 		m_MapKey = CryptUtils::Hash(ModuleName_in) + ProcessID_in;
@@ -43,7 +43,7 @@ namespace SigScan
 	*/
 	bool ProcessImage::InitializeImage()
 	{
-		if (m_pProcessImage == NULL)
+		if (m_pProcessImage == nullptr)
 		{
 			// open the process for reading
 			HANDLE hProcess = OpenProcess(PROCESS_VM_READ, FALSE, m_ProcessID);
@@ -53,17 +53,17 @@ namespace SigScan
 				// allocate the buffer for the memory image
 				m_pProcessImage = new BYTE[m_ImageSize];
 				// make a copy of the process memory
-				if(ReadProcessMemory(hProcess, (LPCVOID)m_pBaseAddress, m_pProcessImage, m_ImageSize, NULL) == FALSE)
+				if(ReadProcessMemory(hProcess, (LPCVOID)m_pBaseAddress, m_pProcessImage, m_ImageSize, nullptr) == FALSE)
 				{
 					delete[] m_pProcessImage;
-					m_pProcessImage = NULL;
+					m_pProcessImage = nullptr;
 				}
 
 				CloseHandle(hProcess);
 			}
 		}
 
-		return (m_pProcessImage != NULL);
+		return (m_pProcessImage != nullptr);
 	}
 
 	/*! \brief Adds a result to the process info
@@ -77,7 +77,7 @@ namespace SigScan
 										DWORD_PTR RawAddress_in,
 									    long Offset_in)
 	{
-		ScanResult *pResult = NULL;
+		ScanResult *pResult = nullptr;
 
 		if (RawAddress_in != NULL)
 		{
@@ -101,7 +101,7 @@ namespace SigScan
 	/*! \brief Retrieves a result given the pattern and offset used to find it
 		\param[in] Pattern_in : the pattern
 		\param[in] Offset_in : the offset
-		\return a pointer to the result if found; NULL otherwise
+		\return a pointer to the result if found; nullptr otherwise
 	*/
 	ScanResult* ProcessImage::FindResult(const std::string & Pattern_in, long Offset_in)
 	{
@@ -111,7 +111,7 @@ namespace SigScan
 		if (ResultIt != m_ResultMap.cend())
 			return ResultIt->second;
 
-		return NULL;
+		return nullptr;
 	}
 
 	/*! \brief Retrieves the key of the process for insertion in a map
@@ -124,7 +124,7 @@ namespace SigScan
 		\return true if the process image is initialized; false otherwise
 	*/
 	bool ProcessImage::IsInitialized() const
-	{ return (m_pProcessImage != NULL); }
+	{ return (m_pProcessImage != nullptr); }
 
 	/*! \brief Retrieves the pointer to the process image
 		\return the pointer to the process image
